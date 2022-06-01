@@ -107,6 +107,16 @@ public class BookBiz {
 
     }
 
+    public Book getByName(String bookname){
+        Book book = null;
+        try {
+            book = bookDao.getByName(bookname);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return book;
+    }
+
     public List<Book> getBooksByTypeId(long typeId){
         try {
             return bookDao.getBooksByTypeId(typeId);

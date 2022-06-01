@@ -24,6 +24,7 @@
           <element id="library" level="project" name="Maven: taglibs:standard:1.1.2" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.8.0" />
           <element id="library" level="project" name="Maven: commons-fileupload:commons-fileupload:1.4" />
+          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.75" />
         </element>
       </element>
       <element id="directory" name="META-INF">

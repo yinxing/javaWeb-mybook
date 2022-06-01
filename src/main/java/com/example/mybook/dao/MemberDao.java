@@ -31,7 +31,7 @@ public class MemberDao {
         return count;
     }
     public int modify(Member member) throws SQLException {
-       int count =  modify(member.getId(),member.getName(),member.getTypeId(),member.getBalance(),
+       int count =  modify(member.getId(),member.getName() ,member.getTypeId(),member.getBalance(),
                 member.getTel(),member.getIdNumber());
 
        return count;
@@ -66,6 +66,13 @@ public class MemberDao {
         Connection conn = DBHelper.getConnection();
         String sql = "select id,`name`,pwd,typeId,balance,regdate,tel,idNumber from member where id=?";
         Member member = runner.query(conn,sql,new BeanHandler<Member>(Member.class),id);
+        conn.close();
+        return member;
+    }
+    public Member getByIdNumber(String idNumber) throws SQLException {
+        Connection conn = DBHelper.getConnection();
+        String sql = "select id,`name`,pwd,typeId,balance,regdate,tel,idNumber from member where idNumber=?";
+        Member member = runner.query(conn,sql,new BeanHandler<Member>(Member.class),idNumber);
         conn.close();
         return member;
     }

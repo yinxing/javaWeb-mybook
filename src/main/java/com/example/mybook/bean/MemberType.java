@@ -7,7 +7,7 @@ public class MemberType implements Serializable {
 
   private long id;
   private String name;
-  private String amount;
+  private long  amount;
   private double discount;
   private long recharge;
   private long keepDay;
@@ -31,11 +31,11 @@ public class MemberType implements Serializable {
   }
 
 
-  public String getAmount() {
+  public long getAmount() {
     return amount;
   }
 
-  public void setAmount(String amount) {
+  public void setAmount(long amount) {
     this.amount = amount;
   }
 

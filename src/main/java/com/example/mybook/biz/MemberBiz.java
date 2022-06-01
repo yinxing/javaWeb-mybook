@@ -81,6 +81,18 @@ public class MemberBiz {
             return null;
         }
     }
+    public Member getByIdNumber(String idNumber){
+        MemberTypeDao memberTypeDao = new MemberTypeDao();
+        Member member = null;
+        try {
+            member =  memberDao.getByIdNumber(idNumber);
+            MemberType memberType = memberTypeDao.getById(member.getTypeId());
+            member.setType(memberType);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return member;
+    }
 
     public static void main(String[] args) {
        //System.out.println(new MemberBiz().modify(6,"fa", "dfas",1,123,"1312","1231232"));

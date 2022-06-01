@@ -15,6 +15,21 @@ public class RecordDao {
         Connection conn = DBHelper.getConnection();
         String sql = "select * from record where bookId = ?";
         List<Record> records = runner.query(conn, sql, new BeanListHandler<Record>(Record.class),bookId);
+        conn.close();
+        return records;
+    }
+    public List<Record> getRecordByIdNum(String IdNum) throws SQLException {
+        Connection conn = DBHelper.getConnection();
+        String sql = "select * from record where memberId = (select id from member where idNumber = ? )";
+        List<Record> records = runner.query(conn, sql, new BeanListHandler<Record>(Record.class),IdNum);
+        conn.close();
+        return records;
+    }
+    public List<Record> getRecordBymemberId(long id) throws SQLException {
+        Connection conn = DBHelper.getConnection();
+        String sql = "select * from record where memberId = ?";
+        List<Record> records = runner.query(conn, sql, new BeanListHandler<Record>(Record.class),id);
+        conn.close();
         return records;
     }
 

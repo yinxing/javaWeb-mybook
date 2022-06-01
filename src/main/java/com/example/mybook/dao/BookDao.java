@@ -79,6 +79,13 @@ public class BookDao {
         return count;
 
     }
+    public Book getByName(String bookname) throws SQLException {
+        Connection conn = DBHelper.getConnection();
+        String sql = "select  * from book where name = ?";
+        Book book = runner.query(conn,sql,new BeanHandler<Book>(Book.class),bookname);
+        conn.close();
+        return book;
+    }
 
     public static void main(String args[])
     {
