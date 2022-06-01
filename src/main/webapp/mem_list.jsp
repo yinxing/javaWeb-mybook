@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html >
 <head>
@@ -65,58 +66,23 @@
                                                         <th>身份证号</th>
                                                         <th>操作</th>
                                                     </tr>
-                                                    <tr align="center" class="d">
-                                                        <td>1</td>
-                                                        <td>andy</td>
-                                                        <td>15901256171</td>
-                                                        <td>普通会员</td>
-                                                        <td>200</td>
-                                                        <td>2021-08-01</td>
-                                                        <td>300312199506150011</td>
-                                                        <td>
-                                                            <a href="#">修改</a>&nbsp;&nbsp;
-                                                            <a href="#">删除</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr align="center" class="d">
-                                                        <td>1</td>
-                                                        <td>andy</td>
-                                                        <td>15901256171</td>
-                                                        <td>普通会员</td>
-                                                        <td>200</td>
-                                                        <td>2021-08-01</td>
-                                                        <td>300312199506150011</td>
-                                                        <td>
-                                                            <a href="#">修改</a>&nbsp;&nbsp;
-                                                            <a href="#">删除</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr align="center" class="d">
-                                                        <td>1</td>
-                                                        <td>andy</td>
-                                                        <td>15901256171</td>
-                                                        <td>普通会员</td>
-                                                        <td>200</td>
-                                                        <td>2021-08-01</td>
-                                                        <td>300312199506150011</td>
-                                                        <td>
-                                                            <a href="#">修改</a>&nbsp;&nbsp;
-                                                            <a href="#">删除</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr align="center" class="d">
-                                                        <td>1</td>
-                                                        <td>andy</td>
-                                                        <td>15901256171</td>
-                                                        <td>普通会员</td>
-                                                        <td>200</td>
-                                                        <td>2021-08-01</td>
-                                                        <td>300312199506150011</td>
-                                                        <td>
-                                                            <a href="#">修改</a>&nbsp;&nbsp;
-                                                            <a href="#">删除</a>
-                                                        </td>
-                                                    </tr>
+
+                                                    <c:forEach items="${memberList}" var="m">
+                                                        <tr align="center" class="d">
+                                                            <td>${m.id}</td>
+                                                            <td>${m.name}</td>
+                                                            <td>${m.tel}</td>
+                                                            <td>${m.type.name}</td>
+                                                            <td>${m.balance}</td>
+                                                            <td>${m.regdate}</td>
+                                                            <td>${m.idNumber}</td>
+                                                            <td>
+                                                                <a onclick="return confirm('确认修改');" href="member.let?type=modifypre&id=${m.id}">修改</a>&nbsp;&nbsp;
+                                                                <a onclick="return confirm('确认删除');" href="member.let?type=remove&id=${m.id}">删除</a>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+
                                                    
                                                 </table>
                                             </form>

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html >
 <head>
@@ -6,6 +7,19 @@
     <meta http-equiv="keywords"  content = "图书 java jsp"/>
     <meta http-equiv="author" content="phenix"/>
     <link rel="stylesheet" type="text/css" href="./Style/skin.css" />
+    <script src="Js/jquery-3.3.1.min.js"></script>
+    <script language="JavaScript">
+        $(function (){
+            $(":radio").each(function (index,element){
+                $(this).click(function (){
+                    var value = $(this).next().val();
+                    $("#balance").val(value);
+                    console.log(value);
+                })
+            })
+        })
+    </script>
+
 </head>
     <body>
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -52,7 +66,7 @@
                                 <table width="100%">
                                     <tr>
                                         <td colspan="2">
-                                            <form action="" method="">
+                                            <form action="member.let?type=add" method="post">
                                                 <table width="100%" class="cont">
                                                     <tr>
                                                         <td width="2%">&nbsp;</td>
@@ -81,9 +95,18 @@
                                                     <tr>
                                                         <td width="2%">&nbsp;</td>
                                                         <td>会员类型</td>
-                                                        <td><input  type="radio" name="memberType" value="1" checked/> 普通会员&nbsp;&nbsp;
-														    <input  type="radio" name="memberType" value="2" /> 白银会员&nbsp;&nbsp;
-															 <input  type="radio" name="memberType" value="3" />黄金会员
+                                                        <td>
+                                                            <c:forEach items="${memberTypes}" var="mt">
+                                                                <c:if test="${mt.id==1}">
+                                                                    <input  type="radio" name="memberType" value="${mt.id}" checked/> ${mt.name}&nbsp;&nbsp;
+                                                                    <input type="hidden" value="${mt.recharge}"/>
+                                                                </c:if>
+                                                                <c:if test="${mt.id!=1}">
+                                                                    <input  type="radio" name="memberType" value="${mt.id}" /> ${mt.name}&nbsp;&nbsp;
+                                                                    <input type="hidden" value="${mt.recharge}"/>
+                                                                </c:if>
+                                                            </c:forEach>
+
                                                         </td>
                                                         <td></td>
                                                         <td width="2%">&nbsp;</td>
@@ -93,7 +116,7 @@
                                                         <td width="2%">&nbsp;</td>
                                                         <td>充值金额</td>
                                                         <td>
-                                                           <input class="text" type="number" name="balance" value="200"  required/>
+                                                           <input class="text" id="balance" type="number" name="balance" value="200"  required/>
                                                         </td>
                                                         <td></td>
                                                         <td width="2%">&nbsp;</td>

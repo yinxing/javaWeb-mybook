@@ -41,8 +41,8 @@
                             </tr>
                         </table>
                         <ul class="RM">
-                            <li><a href="./mem_add.jsp" target="main">会员开卡</a></li>
-                            <li><a href="./mem_list.jsp" target="main">会员管理</a></li>
+                            <li><a href="./member.let?type=addpre" target="main">会员开卡</a></li>
+                            <li><a href="./member.let?type=query" target="main">会员管理</a></li>
                             <li><a href="./mem_recharge.jsp" target="main">会员充值</a></li>
                         </ul>
                     </div>

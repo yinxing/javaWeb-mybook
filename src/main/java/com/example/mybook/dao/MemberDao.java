@@ -22,16 +22,16 @@ public class MemberDao {
         conn.close();
         return count;
     }
-    public int modify(long id,String name, String pwd, long typeId, double balance,
+    public int modify(long id,String name, long typeId, double balance,
                    String tel, String idNumber) throws SQLException {
         Connection conn = DBHelper.getConnection();
-        String sql = "update member set `name` = ?, pwd=?, typeId = ?, balance=?, tel=?, idNumber=? where id=?";
-        int count = runner.update(conn,sql,name,pwd,typeId,balance,tel,idNumber,id);
+        String sql = "update member set `name` = ?, typeId = ?, balance=?, tel=?, idNumber=? where id=?";
+        int count = runner.update(conn,sql,name,typeId,balance,tel,idNumber,id);
         conn.close();
         return count;
     }
     public int modify(Member member) throws SQLException {
-       int count =  modify(member.getId(),member.getName(),member.getPwd(),member.getTypeId(),member.getBalance(),
+       int count =  modify(member.getId(),member.getName(),member.getTypeId(),member.getBalance(),
                 member.getTel(),member.getIdNumber());
 
        return count;
@@ -57,8 +57,7 @@ public class MemberDao {
     }
     public List<Member> getAll() throws SQLException {
         Connection conn = DBHelper.getConnection();
-        String sql="select id,`name`,pwd,typeId,balance,regdate," +
-                "tel,idNumber from member";
+        String sql="select id,`name`,pwd,typeId,balance,regdate,tel,idNumber from member";
         List<Member> members = runner.query(conn,sql,new BeanListHandler<Member>(Member.class));
         DBHelper.close(conn);
         return  members;
@@ -83,7 +82,7 @@ public class MemberDao {
         int count = 0;
         try {
 
-            System.out.println(memberDao.getById(1));
+            System.out.println(memberDao.getAll());
         } catch (SQLException e) {
             e.printStackTrace();
         }
