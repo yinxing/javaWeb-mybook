@@ -67,7 +67,7 @@ public class MemberServlet extends HttpServlet {
                 List<MemberType> memberTypes = memberTypeBiz.getAll();
                 //存request
                 req.setAttribute("memberTypes",memberTypes);
-                System.out.println(memberTypes);
+               // System.out.println(memberTypes);
                 //转发
                 req.getRequestDispatcher("mem_add.jsp").forward(req,resp);
                 break;

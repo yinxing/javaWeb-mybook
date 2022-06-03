@@ -1,4 +1,5 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="java.util.*" import="com.example.mybook.bean.Record" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html >
 <head>
@@ -6,6 +7,47 @@
     <meta http-equiv="keywords"  content = "图书 java jsp"/>
     <meta http-equiv="author" content="phenix"/>
     <link rel="stylesheet" type="text/css" href="./Style/skin.css" />
+    <script src="Js/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function (){
+           $("#btnQuery").click(function (){
+               var idn = $("#idNumber").val();
+               if(!idn)
+               {
+                   alert("请输入用户信息");
+                   return;
+               }
+
+               location.href = "record.let?type=queryback&idn=" + idn;
+
+           }) ;
+           $("#btnReturn").click(function (){
+               if(!$("#memberId").val())
+               {
+                   alert("请输入会员信息");
+                   return;
+               }
+               var idList = new Array();
+               $(".ck").each(function (){
+                   if($(this).prop("checked")) {
+                       idList.push($(this).val());
+                   }
+               });
+               console.log(idList);
+               if(idList.length==0){
+                   alert("请选择需要归还的书籍信息");
+                   return;
+               }
+               var idStr = idList.join("_");
+               console.log(idStr);
+               location.href="record.let?type=back&mid=" + $("#memberId").val() + "&ids=" + idStr;
+           });
+            //全选
+            $("#ckAll").click(function (){
+                $(".ck").prop("checked", $(this).prop("checked"));
+            });
+        });
+    </script>
 </head>
     <body>
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -52,27 +94,61 @@
                             <td width="96%">
                                 <fieldset>
                                     <legend>查询会员</legend>
-                                    <table width="100%" border="1" class="cont"  >
-                                        <tr>
-                                            <td width="8%" class="run-right"> 会员编号</td>
-                                            <td colspan="7"><input class="text" type="text" id="memberId" name="memberId"/> 
-                                                 <input type="button" id="btnQuery" value="确定" style="width: 80px;"/>
-                                                 <input type="button" id="btnReturn" value="批量归还" style="width: 80px;"/>
+                                    <c:if test="${member==null}">
+                                        <table width="100%" border="1" class="cont"  >
+                                            <tr>
+                                                <td width="8%" class="run-right"> 会员编号</td>
+                                                <td colspan="7"><input class="text" type="text" id="idNumber"/>
+                                                    <input type="button" id="btnQuery" value="确定" style="width: 80px;"/>
+                                                    <input type="button" id="btnReturn" value="批量归还" style="width: 80px;"/>
                                                 </td>
-                                            </td>
-                                         
-                                        </tr>
-                                        <tr>
-                                            <td width="8%" class="run-right">会员名称</td>
-                                            <td width="17%"><input class="text" type="text" id="memberId" name="memberId" disabled/></td>
-                                            <td width="8%" class="run-right">会员类型:</td>
-                                            <td width="17%"><input class="text" type="text" id="memberId" name="memberId" disabled /></td>
-                                            <td width="8%" class="run-right">可借数量</td>
-                                            <td width="17%"><input class="text" type="text" id="memberId" name="memberId" disabled /></td>
-                                            <td width="8%" class="run-right">账户余额</td>
-                                            <td width="17%"><input class="text" type="text" id="memberId" name="memberId" disabled /></td>
-                                        </tr>
-                                    </table>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td width="8%" class="run-right">会员名称</td>
+                                                <td width="17%"><input class="text" type="text"  disabled/>
+                                                <input type="hidden" id="memberId" value=""/>
+                                                </td>
+                                                <td width="8%" class="run-right">会员类型:</td>
+                                                <td width="17%"><input class="text" type="text"  disabled /></td>
+                                                <td width="8%" class="run-right">已借数量</td>
+                                                <td width="17%"><input class="text" type="text"  disabled /></td>
+                                                <td width="8%" class="run-right">账户余额</td>
+                                                <td width="17%"><input class="text" type="text"  disabled /></td>
+                                            </tr>
+                                        </table>
+                                    </c:if>
+
+                                    <c:if test="${member!=null}">
+                                        <table width="100%" border="1" class="cont"  >
+                                            <tr>
+                                                <td width="8%" class="run-right"> 会员编号</td>
+                                                <td colspan="7"><input class="text" type="text" id="idNumber"/>
+                                                    <input type="button" id="btnQuery" value="确定" disabled style="width: 80px;"/>
+                                                    <input type="button" id="btnReturn" value="批量归还" style="width: 80px;"/>
+                                                </td>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td width="8%" class="run-right">会员名称</td>
+                                                <td width="17%"><input class="text" type="text"  name="memberId" value="${member.name}" disabled/>
+                                                    <input type="hidden" id="memberId" value="${member.id}"/>
+                                                </td>
+                                                <td width="8%" class="run-right">会员类型:</td>
+                                                <td width="17%"><input class="text" type="text"  name="memberId" value="${member.type.name}" disabled /></td>
+                                                <td width="8%" class="run-right">已借数量</td>
+                                                <%
+                                                    List<Record> records = (List<Record>) request.getAttribute("records");
+                                                %>
+                                                <td width="17%"><input class="text" type="text"  name="memberId" value="<%=records.size()%>" disabled /></td>
+                                                <td width="8%" class="run-right">账户余额</td>
+                                                <td width="17%"><input class="text" type="text"  name="memberId" value="${member.balance}" disabled /></td>
+                                            </tr>
+                                        </table>
+                                    </c:if>
+
                                 </fieldset>
                             </td>
                             <td width="2%">&nbsp;</td>
@@ -94,55 +170,56 @@
                                             <form action="" method="">
                                                 <table width="100%"  class="cont tr_color">
                                                     <tr>
-                                                        <th><input id="ckAll" type="checkbox" value=""/>全选/全不选</th>
+                                                        <th><input id="ckAll" type="checkbox" value="" checked/>全选/全不选</th>
                                                         <th>书籍名</th>
                                                         <th>借阅时间</th>
                                                         <th>应还时间</th>
                                                         <th>出版社</th>
                                                         <th>书架</th>
-                                                        <th>定价(元)</th>
+                                                        <th>押金(元)</th>
                                                         <th>操作</th>
                                                     </tr>
-                                                    <tr align="center" class="d">
-                                                        <td><input class="ck" type="checkbox" value="" /></td>
-                                                        <td>罗小黑战记</td>
-                                                        <td>2010-10-01</td>
-                                                        <td>2010-10-31</td>
-                                                        <td>北京联合出版社</td>
-                                                        <td>东区-01-02</td>
-                                                        <td>39.9</td>
-                                                        <td><a href="#">归还</a>&nbsp;&nbsp;<a href="#">续借</a></td>
-                                                    </tr>
-                                                    <tr align="center" class="d">
-                                                        <td><input class="ck" type="checkbox" value="" /></td>
-                                                        <td>罗小黑战记</td>
-                                                        <td>2010-10-01</td>
-                                                        <td>2010-10-31</td>
-                                                        <td>北京联合出版社</td>
-                                                        <td>东区-01-02</td>
-                                                        <td>39.9</td>
-                                                        <td><a href="#">归还</a>&nbsp;&nbsp;<a href="#">续借</a></td>
-                                                    </tr>
-                                                    <tr align="center" class="d">
-                                                        <td><input class="ck" type="checkbox" value="" /></td>
-                                                        <td>罗小黑战记</td>
-                                                        <td>2010-10-01</td>
-                                                        <td>2010-10-31</td>
-                                                        <td>北京联合出版社</td>
-                                                        <td>东区-01-02</td>
-                                                        <td>39.9</td>
-                                                        <td><a href="#">归还</a>&nbsp;&nbsp;<a href="#">续借</a></td>
-                                                    </tr>
-                                                    <tr align="center" class="d">
-                                                        <td><input class="ck" type="checkbox" value="" /></td>
-                                                        <td>罗小黑战记</td>
-                                                        <td>2010-10-01</td>
-                                                        <td>2010-10-31</td>
-                                                        <td>北京联合出版社</td>
-                                                        <td>东区-01-02</td>
-                                                        <td>39.9</td>
-                                                        <td><a href="#">归还</a>&nbsp;&nbsp;<a href="#">续借</a></td>
-                                                    </tr>
+                                                   <c:if test="${records==null}">
+                                                       <tr align="center" class="d">
+                                                           <td colspan="8" align="center"><h2>暂无数据展示</h2></td>
+                                                       </tr>
+                                                   </c:if>
+                                                    <c:if test="${records!=null}">
+                                                        <c:forEach items="${records}" var="r">
+                                                            <%
+                                                                Record record = (Record)pageContext.getAttribute("r");
+                                                                java.util.Date datetime = new Date();
+                                                                java.sql.Date date = new java.sql.Date(datetime.getTime());
+                                                                if(record.getBackDate().before(date)){
+                                                                    %>
+                                                            <tr align="center" class="d" style="background-color: #f08080">
+                                                                <td><input class="ck" type="checkbox" value="${r.id}" checked/></td>
+                                                                <td>${r.book.name}</td>
+                                                                <td>${r.rentDate}</td>
+                                                                <td>${r.backDate}</td>
+                                                                <td>${r.book.publish}</td>
+                                                                <td>${r.book.address}</td>
+                                                                <td>${r.deposit}</td>
+                                                                <td>请归还图书</td>
+                                                            </tr>
+
+                                                            <%
+                                                                }else{
+                                                            %>
+                                                            <tr align="center" class="d">
+                                                                <td><input class="ck" type="checkbox" value="${r.id}" checked/></td>
+                                                                <td>${r.book.name}</td>
+                                                                <td>${r.rentDate}</td>
+                                                                <td>${r.backDate}</td>
+                                                                <td>${r.book.publish}</td>
+                                                                <td>${r.book.address}</td>
+                                                                <td>${r.deposit}</td>
+                                                                <td><a href="record.let?type=keep&id=${r.id}">续借</a></td>
+                                                            </tr>
+                                                            <% } %>
+                                                        </c:forEach>
+                                                    </c:if>
+
                                                    
                                                    
                                                 </table>

@@ -74,12 +74,17 @@ public class MemberBiz {
         return members;
     }
     public Member getById(long id){
+        Member member = null;
+        MemberTypeDao memberTypeDao = new MemberTypeDao();
         try {
-            return memberDao.getById(id);
+            member = memberDao.getById(id);
+            MemberType type = memberTypeDao.getById(member.getTypeId());
+            member.setType(type);
+
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return member;
     }
     public Member getByIdNumber(String idNumber){
         MemberTypeDao memberTypeDao = new MemberTypeDao();

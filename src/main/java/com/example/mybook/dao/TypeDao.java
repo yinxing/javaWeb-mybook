@@ -24,7 +24,7 @@ public class TypeDao {
         Connection conn = DBHelper.getConnection();
         String sql = "insert into type values(null,?,?)";
         int count = runner.update(conn,sql,name,parentId);
-        conn.close();
+        DBHelper.close(conn);
         return count;
     }
 
@@ -37,7 +37,7 @@ public class TypeDao {
         String sql = "select id, name, parentId from type";
         List<Type> types = runner.query(conn, sql, new BeanListHandler<Type>(Type.class));
 
-        conn.close();
+        DBHelper.close(conn);
         return types;
     }
 
@@ -51,7 +51,7 @@ public class TypeDao {
         String sql = "select id, name, parentId from type where id = ?";
         Type type = runner.query(conn,sql,new BeanHandler<Type>(Type.class),typeId);
 
-        conn.close();
+        DBHelper.close(conn);
         return type;
     }
 
@@ -66,7 +66,7 @@ public class TypeDao {
         Connection conn = DBHelper.getConnection();
         String sql = "update type set name=?, parentId=? where id=?";
         int count = runner.update(conn,sql,name,parentId,id);
-        conn.close();
+        DBHelper.close(conn);
         return count;
     }
 
@@ -79,7 +79,7 @@ public class TypeDao {
         Connection conn = DBHelper.getConnection();
         String sql = "delete from type where id=?";
         int count = runner.update(conn,sql,id);
-        conn.close();
+        DBHelper.close(conn);
         return count;
     }
     public static void main(String args[])

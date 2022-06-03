@@ -23,7 +23,7 @@ public class UserDao {
         // 3.调用查询方法,将查询的数据分装成user对象
         User user = runner.query(conn, sql, new BeanHandler<User>(User.class),name,pwd);
         // 4.关闭连接对象
-        conn.close();
+        DBHelper.close(conn);
         // 5.返回user
         return user;
     }
@@ -38,7 +38,7 @@ public class UserDao {
         String sql = "update user set pwd=? where id=?";
         Connection conn = DBHelper.getConnection();
         int count = runner.update(conn,sql,pwd,id);
-        conn.close();
+        DBHelper.close(conn);
         return count;
 
     }

@@ -17,7 +17,7 @@ public class MemberTypeDao {
         Connection conn = DBHelper.getConnection();
         String sql = "select * from membertype";
         List<MemberType> types = runner.query(conn, sql, new BeanListHandler<MemberType>(MemberType.class));
-        conn.close();
+        DBHelper.close(conn);
         return types;
     }
 
@@ -25,7 +25,7 @@ public class MemberTypeDao {
         Connection conn = DBHelper.getConnection();
         String sql = "select * from membertype where id = ?";
         MemberType type = runner.query(conn, sql, new BeanHandler<MemberType>(MemberType.class),id);
-        conn.close();
+        DBHelper.close(conn);
         return type;
     }
 

@@ -8,20 +8,46 @@
     <link rel="stylesheet" type="text/css" href="./Style/skin.css" />
     <script src="Js/jquery-3.3.1.min.js"></script>
     <script>
+
+        function getCurrentDate(){
+            var dateObj = new Date();
+            var year = dateObj.getFullYear();
+            var month = dateObj.getMonth() + 1;
+            var date = dateObj.getDate();
+            var dateStr = year +"-"+ (month>=10?month:"0"+month)+"-"+(date>=10?date:"0"+date);
+            return dateStr;
+        }
+
+        function getBackDate(count){
+            var dateObj = new Date();
+            var mills = dateObj.getMilliseconds();
+            mills += count*24*60*60*1000;
+            dateObj.setMilliseconds(mills);
+
+            var year = dateObj.getFullYear();
+            var month = dateObj.getMonth()+1;
+            var date = dateObj.getDate();
+            var dateStr = year+"-"+(month>=10?month:"0"+month)+"-"+(date>=10?date:"0"+date);
+            return dateStr;
+        }
+
+
         $(function (){
             $("#btnQueryBook").prop("disabled","disabled");
             $("#btnSubmit").prop("disabled","disabled");
 
+            var member = null;
+
             $("#btnQuery").click(function (){
                 var content = $("#memberId").val();
-                if(!content){
+                if(content==null){
                  alert("输入用户号！");
                  return;
                 }
                 var url = "member.let?type=doajax&idn=" + content;
                 $.get(url,function (data,status){
                     console.log(data);
-                    var member = JSON.parse(data);
+                    member = JSON.parse(data);
                     console.log(member.name);
                     $("#name").val(member.name);
                     $("#type").val(member.type.name);
@@ -31,6 +57,88 @@
                 $(this).prop("disabled");
                 $("#btnQueryBook").removeAttr("disabled");
             });
+
+            var bookNameList = new Array();
+            $("#btnQueryBook").click(function (){
+                var name = $("#bookContent").val();
+                var url = "book.let?type=doajax&name=" + name;
+                $.get(url,function (data,status){
+                    if(data === "{}"){
+                        alert("当前书籍不存在，查找失败");
+                        return;
+                    }
+                    if(bookNameList.indexOf(name)>=0)
+                    {
+                        alert("书名被添加了，添加失败");
+                        return;
+                    }
+                    bookNameList.push(name);
+                        // <tr align="center" class="d">
+                        //     <td><input class="ck" type="checkbox" value="" /></td>
+                        //     <td>罗小黑战记</td>
+                        //     <td>2010-10-01</td>
+                        //     <td>2010-10-31</td>
+                        //     <td>北京联合出版社</td>
+                        //     <td>东区-01-02</td>
+                        //     <td>39.9</td>
+                        // </tr>
+                        var book = JSON.parse(data);
+
+                        var tr = $("<tr align=\"center\" class=\"d\">") ;
+
+                        var tdCheck = $("<td><input class=\"ck\" type=\"checkbox\" value=\""+ book.id +"\" checked/></td>");
+                        var tdName = $("<td>"+ book.name +"</td>");
+                        var tdRentDate = $("<td>"+getCurrentDate()+"</td>");
+                        var tdBackDate = $("<td>"+getBackDate(member.type.keepDay)+"</td>");
+                        var tdPublish = $("<td>"+ book.publish +"</td>");
+                        var tdAddress = $("<td>"+ book.address +"</td>");
+                        var tdPrice = $("<td>"+ book.price +"</td>");
+                        var end = $("</tr>");
+
+                        tr.append(tdCheck);
+                        tr.append(tdName);
+                        tr.append(tdRentDate);
+                        tr.append(tdBackDate);
+                        tr.append(tdPublish);
+                        tr.append(tdAddress);
+                        tr.append(tdPrice);
+                        tr.append(end);
+
+                        $("#tdBook").append(tr);
+                        $("#bookContent").val("");
+                        $("#btnSubmit").removeAttr("disabled");
+
+                        //全选
+                        $("#ckAll").click(function (){
+                            $(".ck").prop("checked", $(this).prop("checked"));
+                        })
+
+                    $("#btnSubmit").click(function (){
+                        var count = 0;
+                        var ids = new Array();
+                        $(".ck").each(function (){
+                            if($(this).prop("checked")){
+                                ids.push($(this).val());
+                                count ++;
+                            }
+                        });
+                        if(count==0){
+                            alert("请选择借阅书籍");
+                            return;
+                        }
+                        if(count>member.type.amount){
+                            alert("选择书籍超限");
+                            return;
+                        }
+                        location.href="record.let?type=add&mid="+member.id+"&ids="+ids.join("_");
+
+                    })
+
+
+
+                })
+            })
+
         });
     </script>
 
@@ -141,9 +249,9 @@
                             <tr>
                                 <td colspan="2">
                                     <form action="" method="">
-                                        <table width="100%"  class="cont tr_color">
+                                        <table width="100%"  class="cont tr_color" id="tdBook">
                                             <tr>
-                                                <th><input id="ckAll" type="checkbox" value=""/>全选/全不选</th>
+                                                <th><input id="ckAll" type="checkbox" value="" checked/>全选/全不选</th>
                                                 <th>书籍名</th>
                                                 <th>借阅时间</th>
                                                 <th>应还时间</th>
@@ -151,51 +259,8 @@
                                                 <th>书架</th>
                                                 <th>定价(元)</th>
                                             </tr>
-                                            <tr align="center" class="d">
-                                                <td><input class="ck" type="checkbox" value="" /></td>
-                                                <td>罗小黑战记</td>
-                                                <td>2010-10-01</td>
-                                                <td>2010-10-31</td>
-                                                <td>北京联合出版社</td>
-                                                <td>东区-01-02</td>
-                                                <td>39.9</td>
-                                            </tr>
-                                            <tr align="center" class="d">
-                                                <td><input class="ck" type="checkbox" value="" /></td>
-                                                <td>罗小黑战记</td>
-                                                <td>2010-10-01</td>
-                                                <td>2010-10-31</td>
-                                                <td>北京联合出版社</td>
-                                                <td>东区-01-02</td>
-                                                <td>39.9</td>
-                                            </tr>
-                                            <tr align="center" class="d">
-                                                <td><input class="ck" type="checkbox" value="" /></td>
-                                                <td>罗小黑战记</td>
-                                                <td>2010-10-01</td>
-                                                <td>2010-10-31</td>
-                                                <td>北京联合出版社</td>
-                                                <td>东区-01-02</td>
-                                                <td>39.9</td>
-                                            </tr>
-                                            <tr align="center" class="d">
-                                                <td><input class="ck" type="checkbox" value="" /></td>
-                                                <td>罗小黑战记</td>
-                                                <td>2010-10-01</td>
-                                                <td>2010-10-31</td>
-                                                <td>北京联合出版社</td>
-                                                <td>东区-01-02</td>
-                                                <td>39.9</td>
-                                            </tr>
-                                            <tr align="center" class="d">
-                                                <td><input class="ck" type="checkbox" value="" /></td>
-                                                <td>罗小黑战记</td>
-                                                <td>2010-10-01</td>
-                                                <td>2010-10-31</td>
-                                                <td>北京联合出版社</td>
-                                                <td>东区-01-02</td>
-                                                <td>39.9</td>
-                                            </tr>
+
+
 
                                         </table>
                                     </form>

@@ -47,13 +47,13 @@ public class UserServlet extends HttpServlet {
                 String pwd = req.getParameter("pwd");
                 String usercode = req.getParameter("valcode");
 
-//                //从session中取验证码进行判断  测试时不用
-//                String code = session.getAttribute("code").toString();
-//                if(!code.equalsIgnoreCase(usercode))
-//                {
-//                    out.println(("<script>alert('验证码不正确！');location.href='login.html';</script>"));
-//                    return ;
-//                }
+                //从session中取验证码进行判断  测试时不用
+                String code = session.getAttribute("code").toString();
+                if(!code.equalsIgnoreCase(usercode))
+                {
+                    out.println(("<script>alert('验证码不正确！');location.href='login.html';</script>"));
+                    return ;
+                }
 
                 // 3.调用UserBiz的getuser方法, 根据用户名和密码获取对应的用户对象
 

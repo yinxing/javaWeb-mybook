@@ -19,7 +19,7 @@ public class BookDao {
         String sql = "select * from book where typeId=?";
         List<Book> books = runner.query(conn, sql, new BeanListHandler<Book>(Book.class),typeId);
 
-        conn.close();
+        DBHelper.close(conn);
         return  books;
     }
     // 添加书籍
@@ -29,7 +29,7 @@ public class BookDao {
         String sql = "insert into book(typeId, `name`, price, `desc`, pic, publish, author, stock, address) values " +
                 "(?,?,?,?,?,?,?,?,?)";
         int count = runner.update(conn,sql,typeId,name,price,desc,pic,publish,author,stock,address);
-        conn.close();
+        DBHelper.close(conn);
         return count;
     }
     //修改书籍
@@ -39,14 +39,21 @@ public class BookDao {
         String sql = "update book set typeId=?,`name` = ?, price = ?, `desc`=?, pic=?, publish=?, " +
                 " author=?, stock=?, address=? where id = ?";
         int count = runner.update(conn,sql,typeId,name,price,desc,pic,publish,author,stock,address,id);
-        conn.close();
+        DBHelper.close(conn);
+        return count;
+    }
+    public int modify(long id, int amount)throws SQLException{
+        Connection conn = DBHelper.getConnection();
+        String sql = "update book set stock = stock + ? where id = ?";
+        int count = runner.update(conn,sql,amount,id);
+        DBHelper.close(conn);
         return count;
     }
     public int remove(long id) throws SQLException {
         Connection conn = DBHelper.getConnection();
         String sql = "delete from book where id = ?";
         int count = runner.update(conn,sql,id);
-        conn.close();
+        DBHelper.close(conn);
         return count;
     }
 
@@ -59,7 +66,7 @@ public class BookDao {
         Connection conn = DBHelper.getConnection();
         String sql = "select * from book limit ?,?";
         List<Book> books = runner.query(conn,sql,new BeanListHandler<Book>(Book.class),(pageIndex-1)*pageSize,pageSize);
-        conn.close();
+        DBHelper.close(conn);
         return books;
 
     }
@@ -67,7 +74,7 @@ public class BookDao {
         Connection conn = DBHelper.getConnection();
         String sql = "select  * from book where id = ?";
         Book book = runner.query(conn,sql,new BeanHandler<Book>(Book.class),id);
-        conn.close();
+        DBHelper.close(conn);
         return book;
     }
     public int getCount() throws SQLException {
@@ -75,7 +82,7 @@ public class BookDao {
         String sql = "select count(id) from book";
         Number data = runner.query(conn,sql,new ScalarHandler<>());
         int count = data.intValue();
-        conn.close();
+        DBHelper.close(conn);
         return count;
 
     }
@@ -83,7 +90,7 @@ public class BookDao {
         Connection conn = DBHelper.getConnection();
         String sql = "select  * from book where name = ?";
         Book book = runner.query(conn,sql,new BeanHandler<Book>(Book.class),bookname);
-        conn.close();
+        DBHelper.close(conn);
         return book;
     }
 
@@ -94,7 +101,7 @@ public class BookDao {
         int count = 0;
         try {
             BookDao bookDao = new BookDao();
-            count = bookDao.getCount();
+            count = bookDao.modify(1,-1);
             System.out.println(count);
         } catch (SQLException e) {
             e.printStackTrace();

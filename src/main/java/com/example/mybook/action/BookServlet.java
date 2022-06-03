@@ -2,6 +2,7 @@ package com.example.mybook.action;
 
 
 
+import com.alibaba.fastjson.JSON;
 import com.example.mybook.bean.Book;
 import com.example.mybook.biz.BookBiz;
 import com.example.util.DateHelper;
@@ -108,6 +109,13 @@ public class BookServlet extends HttpServlet {
 
                 break;
             case "doajax":
+                String name = req.getParameter("name");
+                Book book2 = bookBiz.getByName(name);
+                if(book2 == null){
+                    out.print("{}");
+                }else{
+                    out.print(JSON.toJSONString(book2));
+                }
 
                 break;
             default:
@@ -225,7 +233,7 @@ public class BookServlet extends HttpServlet {
 
         Book book = bookBiz.getById(bookId);
 
-        System.out.println(book);
+     //   System.out.println(book);
 
         req.setAttribute("book", book);
         req.getRequestDispatcher("book_details.jsp").forward(req,resp);
